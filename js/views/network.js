@@ -47,7 +47,6 @@ define([
             this.node_text();
             this.node_color();
             this.update_node_color();
-            this.update_node_size();
             this.size_slider();
             this.force_on();
         },
@@ -175,23 +174,17 @@ define([
           return colors;*/
         },
 
-        update_node_size: function() {
-          $('#sizebutton').click(function(){
-            node_radius: 50;
-          });
-        },
-
         size_slider: function() {
           var scope = this;
           $(function() {
             $( "#slider" ).slider({
               value: 10,
-              min: 0,
+              min: 5,
               max: 30,
               step: 5,
               slide: function( event, ui ) {
                 $( "#amount" ).val( ui.value );
-                scope.nodes.append("circle")
+                scope.circles
                      .attr("r", ui.value);
               }
             });
