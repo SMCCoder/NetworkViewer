@@ -38,3 +38,11 @@ path {
 .page-header {
     margin: 0px 0px 0px 0px;
 }
+
+#colorbutton {
+  margin-right: 20px;
+}
+
+#sizebutton {
+  margin-right: 20px;
+}

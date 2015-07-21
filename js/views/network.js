@@ -22,22 +22,22 @@ define([
                 Initialize network view
             */
             this.element = "#network_viewer";
-            
+
             // Parameters for building network
             this.width = this.model.get("width");
             this.height = this.model.get("height");
-            
+
             // Initialize the svg width
             this.svg = d3.select(this.element).append("svg")
                 .attr("width", this.width)
                 .attr("height", this.height)
-            
+
             // Initialize the force
             this.force = d3.layout.force()
                 .charge(this.model.get("charge"))
                 .linkDistance(this.model.get("link_distance"))
                 .size([this.width-10, this.height-10])
-            
+
             // Start force simulation.
             this.start_force();
             this.draw_links();
@@ -45,6 +45,8 @@ define([
             this.node_shape();
             this.node_text();
             this.node_color();
+            this.update_node_color();
+            this.update_node_size();
             this.force_on();
         },
 
@@ -82,7 +84,7 @@ define([
         node_shape: function(shape) {
             /*
                 Add shapes to each node in D3 force simulation.
-            
+
                 Parameter:
                 ---------
                 shape: string
@@ -113,7 +115,7 @@ define([
                         return "translate(" + d.x + "," + d.y + ")";
                     })
             });
-            
+
             this.force.start();
         },
 
@@ -125,6 +127,8 @@ define([
                 .attr("class", "graph_text")
                 .attr("dx", 12)
                 .attr("dy", ".35em")
+                //.attr("fill", "black")
+                //.attr("font-size", "9px")
                 .text(function(d) { return d.id; });
 
             this.force_on();
@@ -137,6 +141,34 @@ define([
             var colors = d3.interpolate('orange', 'purple');
             this.nodes
                 .attr("fill", function(d){ return colors(d.value)});
+
+                $('#colorbutton').click(function() {
+                  $(".graph_node").css('fill','violet');
+                  //var colorUpdate = .data(this.model.get("nodes"))
+                  colors = d3.interpolate('blue', 'red');
+                  /*d3.select(this.nodes).transition()
+                    .each("start", function() { d3.select(this.nodes).style("fill", "steelblue"); })
+                    .style("fill", "red");*/
+                    //return colors;
+                });
+                return colors;
+        },
+
+        update_node_color: function() {
+          /*$('#colorbutton').click(function() {
+            //var colorUpdate = .data(this.model.get("nodes"))
+            colors = d3.interpolate('blue', 'red');
+            /*d3.select(this.nodes).transition()
+              .each("start", function() { d3.select(this.nodes).style("fill", "steelblue"); })
+              .style("fill", "red");/
+          });
+          return colors;*/
+        },
+
+        update_node_size: function() {
+          $('#sizebutton').click(function(){
+            node_radius: 50;
+          });
         },
 
     });

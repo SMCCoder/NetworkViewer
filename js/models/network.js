@@ -22,7 +22,7 @@ define([
             "link_distance": 100,
             "color_on": false,
             "node_text_on": true,
-            "node_radius": 13,
+            "node_radius": 12,
             "add_node_names": true,
         },
 
