@@ -100,10 +100,10 @@ define([
 
             var scope = this;
 
-            $("#sizebutton").click(function(){
+            /*$("#sizebutton").click(function(){
               scope.circles = scope.nodes.append("circle")
                   .attr("r", 20);
-            });
+            });*/
         },
 
         force_on: function() {
@@ -182,19 +182,22 @@ define([
         },
 
         size_slider: function() {
+          var scope = this;
           $(function() {
             $( "#slider" ).slider({
-              value:100,
+              value: 10,
               min: 0,
-              max: 500,
-              step: 50,
+              max: 30,
+              step: 5,
               slide: function( event, ui ) {
-                $( "#amount" ).val( "$" + ui.value );
+                $( "#amount" ).val( ui.value );
+                scope.nodes.append("circle")
+                     .attr("r", ui.value);
               }
             });
-            $( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
+            $( "#amount" ).val( $( "#slider" ).slider( "value" ) );
             });
-          }
+          },
 
     });
 
