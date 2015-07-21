@@ -4,10 +4,11 @@ General network graph of nodes and edges.
 
 define([
     'jquery',
+    'jqueryui',
     'd3',
     'backbone',
     'js/models/network'
-], function($, d3, backbone, NetworkModel) {
+], function($, $ui, d3, backbone, NetworkModel) {
 
     // --------------------------------------
     // Network View
@@ -47,6 +48,7 @@ define([
             this.node_color();
             this.update_node_color();
             this.update_node_size();
+            this.size_slider();
             this.force_on();
         },
 
@@ -95,6 +97,13 @@ define([
                 .attr("id", function(d) {return "node-"+d.index})
                 .attr("node-index", function(d) {return d.index})
                 .attr("r", this.model.get("node_radius"))
+
+            var scope = this;
+
+            $("#sizebutton").click(function(){
+              scope.circles = scope.nodes.append("circle")
+                  .attr("r", 20);
+            });
         },
 
         force_on: function() {
@@ -142,16 +151,17 @@ define([
             this.nodes
                 .attr("fill", function(d){ return colors(d.value)});
 
+                var scope = this;
+
                 $('#colorbutton').click(function() {
-                  $(".graph_node").css('fill','violet');
+                  //$(".graph_node").css('fill','violet');
                   //var colorUpdate = .data(this.model.get("nodes"))
-                  colors = d3.interpolate('blue', 'red');
-                  /*d3.select(this.nodes).transition()
-                    .each("start", function() { d3.select(this.nodes).style("fill", "steelblue"); })
-                    .style("fill", "red");*/
+                  var colorUpdate = d3.interpolate('blue', 'red');
+                  //d3.select(".graph_node").transition()
+                    //.each("start", function() { d3.select(".graph_node") })
+                    scope.nodes.attr("fill", function(d){ return colorUpdate(d.value)});
                     //return colors;
                 });
-                return colors;
         },
 
         update_node_color: function() {
@@ -170,6 +180,21 @@ define([
             node_radius: 50;
           });
         },
+
+        size_slider: function() {
+          $(function() {
+            $( "#slider" ).slider({
+              value:100,
+              min: 0,
+              max: 500,
+              step: 50,
+              slide: function( event, ui ) {
+                $( "#amount" ).val( "$" + ui.value );
+              }
+            });
+            $( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
+            });
+          }
 
     });
 

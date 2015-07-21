@@ -3,6 +3,7 @@
     <head>
         <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/network.css">
+        <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.css">
         <script data-main="js/main" src="lib/require/require.js"></script>
 
     </head>
@@ -36,6 +37,13 @@
                 <!-- Main svg area -->
                 <div id="network_viewer"></div>
             </div>
+
+            <p>
+              <label for="amount">Donation amount ($50 increments):</label>
+              <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+            </p>
+
+            <div id="slider"></div>
         </div>
     </body>
 </html>
