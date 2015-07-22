@@ -46,3 +46,29 @@ path {
 #sizebutton {
   margin-right: 20px;
 }
+
+#slider {
+  width: 200px;
+}
+
+#sliderText {
+  margin-top: 25px;
+}
+
+form {
+  margin-top: 20px;
+}
+
+#inputNumber {
+  width: 200px;
+}
+
+/*#gobutton {
+  height: 28px;
+  width:50px;
+  text-align: center;
+}
+
+#gotext {
+  margin-top: 30;
+}*/

@@ -34,16 +34,39 @@
             <!-- The choice of application is displayed here. -->
             <div class="container-fluid" id="app_container">
 
+              <!--<h4>Indetifier</h4>
+              	<form name="indentifyForm" style="display: inline-block;">
+              		<input type="number" name="normalizeNumber"/>
+              	</form>
+                <button id="gobutton" type="button" class="btn btn-primary btn-sm" style="display: inline-block;">
+                  Go
+                </button>
+              	<br/>
+                <div class="list"></div>-->
+
+                <form class="form-inline">
+                  <h5><strong>Indentifier</strong></h5>
+                  <div class="form-group">
+                    <label class="sr-only" for="inputNumber">Identifier</label>
+                    <input type="text" class="form-control" id="inputNumber" placeholder="Node number">
+                  </div>
+                  <button type="button" class="btn btn-default" id="gobutton">Go</button>
+                </form>
+
+                <div class="list"></div>
+
+                <p id="sliderText">
+                  <label for="amount">Size:</label>
+                  <input type="text" id="amount" readonly style="border:0; font-weight:bold;">
+                </p>
+
+                <div id="slider"></div>
+
                 <!-- Main svg area -->
                 <div id="network_viewer"></div>
+
             </div>
 
-            <p>
-              <label for="amount">Size:</label>
-              <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-            </p>
-
-            <div id="slider"></div>
         </div>
     </body>
 </html>

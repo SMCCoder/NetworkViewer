@@ -46,8 +46,8 @@ define([
             this.node_shape();
             this.node_text();
             this.node_color();
-            this.update_node_color();
             this.size_slider();
+            this.scale_nodes();
             this.force_on();
         },
 
@@ -135,8 +135,7 @@ define([
                 .attr("class", "graph_text")
                 .attr("dx", 12)
                 .attr("dy", ".35em")
-                //.attr("fill", "black")
-                //.attr("font-size", "9px")
+
                 .text(function(d) { return d.id; });
 
             this.force_on();
@@ -156,22 +155,12 @@ define([
                   //$(".graph_node").css('fill','violet');
                   //var colorUpdate = .data(this.model.get("nodes"))
                   var colorUpdate = d3.interpolate('blue', 'red');
-                  //d3.select(".graph_node").transition()
-                    //.each("start", function() { d3.select(".graph_node") })
+                  //var scope2 = this;
+                  //d3.select(scope.nodes).transition()
+                    //.each("start", function() { d3.select(scope.nodes) })
                     scope.nodes.attr("fill", function(d){ return colorUpdate(d.value)});
                     //return colors;
                 });
-        },
-
-        update_node_color: function() {
-          /*$('#colorbutton').click(function() {
-            //var colorUpdate = .data(this.model.get("nodes"))
-            colors = d3.interpolate('blue', 'red');
-            /*d3.select(this.nodes).transition()
-              .each("start", function() { d3.select(this.nodes).style("fill", "steelblue"); })
-              .style("fill", "red");/
-          });
-          return colors;*/
         },
 
         size_slider: function() {
@@ -186,11 +175,63 @@ define([
                 $( "#amount" ).val( ui.value );
                 scope.circles
                      .attr("r", ui.value);
+                scope.labels
+                     .attr("dx", ui.value + 3);
               }
             });
             $( "#amount" ).val( $( "#slider" ).slider( "value" ) );
             });
-          },
+        },
+
+        scale_nodes: function() {
+
+          var scope = this;
+
+          $("#gobutton").click(function(){
+
+            var nodes = scope.model.get("nodes");
+
+            var numInput = $("#inputNumber").val();
+            var node_names = [];
+
+            for(var i = 0; i < nodes.length; i++){
+
+              node_names.push(nodes[i].id);
+
+              if (node_names[i] === numInput) {
+
+                var colorUpdate = d3.interpolate('green', 'red');
+                scope.nodes.attr("fill", function(d){ return colorUpdate(d.value)});
+                console.log(node_names[i]);
+
+              }
+            }
+
+          });
+
+          var tags = function(key){
+              var nodes = scope.model.get("nodes");
+              var node_names = [];
+              for(var i = 0; i<nodes.length; i++){
+                node_names.push(nodes[i].id);
+              }
+              return node_names;
+          }
+
+          $( "#inputNumber" ).autocomplete({
+            source: tags()//function(d) { return d.id; })
+          });
+
+          //var scope = this;
+
+          /*$(".graph_node").click(function(){
+
+            var colorUpdate = d3.interpolate('green', 'red');
+            scope.nodes.attr("fill", function(d){ return colorUpdate(d.value)});
+
+          });*/
+
+        },
 
     });
 
