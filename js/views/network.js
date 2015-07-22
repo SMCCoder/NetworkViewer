@@ -200,9 +200,14 @@ define([
 
               if (node_names[i] === numInput) {
 
-                var colorUpdate = d3.interpolate('green', 'red');
-                scope.nodes.attr("fill", function(d){ return colorUpdate(d.value)});
+                //var colorUpdate = d3.interpolate('green', 'red');
+                //scope.nodes.attr("fill", function(d){ return colorUpdate(d.value)});
                 console.log(node_names[i]);
+
+                var normalRadius = 10;
+
+                node_names[i] = scope.circles
+                                     .attr("r",normalRadius);
 
               }
             }
