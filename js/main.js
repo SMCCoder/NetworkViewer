@@ -7,10 +7,10 @@ requirejs([
     'js/views/modal'
 ], function($, d3, NetworkModel, NetworkView, NetworkModal) {
 
-    //$( "#slider" ).slider();
+    var data = [data1, data2]
 
     // Data plotted in network
-    var data1 = {
+    var data1 = { "ref": "000",
                   "links": [
                     {
                       "source": 0,
@@ -133,6 +133,7 @@ requirejs([
                 }
 
     var data2 = {
+                  "ref": "111",
                   "links": [
                     {
                       "tsize": 0.112,

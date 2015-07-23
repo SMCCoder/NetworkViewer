@@ -47,7 +47,8 @@ define([
             this.node_text();
             this.node_color();
             this.size_slider();
-            this.scale_nodes();
+            this.form();
+            this.update_data();
             this.force_on();
         },
 
@@ -95,7 +96,7 @@ define([
                 .attr("class", "graph_circle")
                 .attr("id", function(d) {return "node-"+d.index})
                 .attr("node-index", function(d) {return d.index})
-                .attr("r", this.model.get("node_radius"))
+                //.attr("r", this.model.get("node_radius"))
 
             var scope = this;
 
@@ -158,61 +159,42 @@ define([
                   //var scope2 = this;
                   //d3.select(scope.nodes).transition()
                     //.each("start", function() { d3.select(scope.nodes) })
-                    scope.nodes.attr("fill", function(d){ return colorUpdate(d.value)});
+                    scope.nodes.attr("fill", function(d){return colorUpdate(d.value)});
                     //return colors;
                 });
         },
 
         size_slider: function() {
           var scope = this;
+          var interpolateRadius = d3.interpolate(5, 25);
+
+          this.circles
+               .attr("r", function(d) {return interpolateRadius(d.value)});
+
+          this.labels
+              .attr("dx", function(d) {return interpolateRadius(d.value)});
+
           $(function() {
             $( "#slider" ).slider({
-              value: 10,
-              min: 5,
-              max: 30,
-              step: 5,
+              value: 1.5,
+              min: 0,
+              max: 3,
+              step: .5,
               slide: function( event, ui ) {
                 $( "#amount" ).val( ui.value );
-                scope.circles
-                     .attr("r", ui.value);
                 scope.labels
-                     .attr("dx", ui.value + 3);
+                     .attr("dx", function(d) {return interpolateRadius(d.value * ui.value)});
+                scope.circles
+                     .attr("r", function(d) {return interpolateRadius(d.value * ui.value)});
               }
             });
             $( "#amount" ).val( $( "#slider" ).slider( "value" ) );
             });
         },
 
-        scale_nodes: function() {
+        form: function() {
 
           var scope = this;
-
-          $("#gobutton").click(function(){
-
-            var nodes = scope.model.get("nodes");
-
-            var numInput = $("#inputNumber").val();
-            var node_names = [];
-
-            for(var i = 0; i < nodes.length; i++){
-
-              node_names.push(nodes[i].id);
-
-              if (node_names[i] === numInput) {
-
-                //var colorUpdate = d3.interpolate('green', 'red');
-                //scope.nodes.attr("fill", function(d){ return colorUpdate(d.value)});
-                console.log(node_names[i]);
-
-                var normalRadius = 10;
-
-                node_names[i] = scope.circles
-                                     .attr("r",normalRadius);
-
-              }
-            }
-
-          });
 
           var tags = function(key){
               var nodes = scope.model.get("nodes");
@@ -224,17 +206,58 @@ define([
           }
 
           $( "#inputNumber" ).autocomplete({
-            source: tags()//function(d) { return d.id; })
+            source: tags()
           });
 
-          //var scope = this;
+          $("#gobutton").click(function(){
 
-          /*$(".graph_node").click(function(){
+            var numInput = $("#inputNumber").val();
 
-            var colorUpdate = d3.interpolate('green', 'red');
-            scope.nodes.attr("fill", function(d){ return colorUpdate(d.value)});
+            var nodes = scope.model.get("nodes");
+            var node_names = [];
 
-          });*/
+            for(var i = 0; i < nodes.length; i++){
+              node_names.push(nodes[i].id);
+
+              if (node_names[i] === numInput) {
+                console.log(node_names[i]);
+              }
+            }
+
+          });
+
+        },
+
+        update_data: function() {
+          //$('.dropdown-toggle').dropdown('toggle')
+          var scope = this;
+
+          var dataMenu = function() {
+            this.list1 = $("<li>");
+            this.drop1 = $("<a>").attr("id","select1")
+                                 .attr("href","#");
+
+            this.list2 = $("<li>");
+            this.drop2 = $("<a>").attr("id","select2")
+                                 .attr("href","#");
+          }
+
+          dataMenu.prototype.add_drops = function(element) {
+            element.append(this.list1);
+            this.list1.append(this.drop1);
+            this.drop1.text(scope.model.get("ref"));
+
+            this.list1.after(this.list2);
+            this.list2.append(this.drop2);
+            this.drop2.text("dat2");
+          }
+
+          var drops = new dataMenu();
+          drops.add_drops($("#menu1"));
+
+          $("#select1").click(function() {
+            console.log("toggled");
+          });
 
         },
 

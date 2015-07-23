@@ -63,6 +63,10 @@ form {
   width: 200px;
 }
 
+#dLabel {
+  margin-left: 20;
+}
+
 /*#gobutton {
   height: 28px;
   width:50px;
