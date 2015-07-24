@@ -29,12 +29,17 @@ define([
         initialize: function(data){
             // Data is going to be an array of objects
             // for loop to find data of interest and set nodes and links
-            //data = [this.data1, this.data2]
             this.set({
-                "nodes": data.nodes,
-                "links": data.links,
-                "ref": data.ref
+              "datasets": data,
             })
+
+            this.set({
+                "nodes": data[0].nodes,
+                "links": data[0].links,
+                "ref": data[0].ref
+            })
+
+            
 
         },
 

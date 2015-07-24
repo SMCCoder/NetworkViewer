@@ -202,6 +202,7 @@ define([
               for(var i = 0; i<nodes.length; i++){
                 node_names.push(nodes[i].id);
               }
+              console.log(node_names);
               return node_names;
           }
 
@@ -216,8 +217,11 @@ define([
             var nodes = scope.model.get("nodes");
             var node_names = [];
 
+            console.log(nodes[2]);
+
             for(var i = 0; i < nodes.length; i++){
               node_names.push(nodes[i].id);
+              console.log(node_names[i]);
 
               if (node_names[i] === numInput) {
                 console.log(node_names[i]);
@@ -229,34 +233,71 @@ define([
         },
 
         update_data: function() {
-          //$('.dropdown-toggle').dropdown('toggle')
+
           var scope = this;
 
           var dataMenu = function() {
-            this.list1 = $("<li>");
-            this.drop1 = $("<a>").attr("id","select1")
-                                 .attr("href","#");
-
-            this.list2 = $("<li>");
-            this.drop2 = $("<a>").attr("id","select2")
-                                 .attr("href","#");
           }
 
-          dataMenu.prototype.add_drops = function(element) {
-            element.append(this.list1);
-            this.list1.append(this.drop1);
-            this.drop1.text(scope.model.get("ref"));
+          dataMenu.prototype.add_element = function(element) {
+            /*
+            Create an element in dropdown.
+            */
+            // Construct dropdown label.
+            label = $("<a>").attr("id", "dropdown-" + element)
+                    .attr("href","#")
+                    .text(element);
 
-            this.list1.after(this.list2);
-            this.list2.append(this.drop2);
-            this.drop2.text("dat2");
+            // Construct html element here
+            html_el = $("<li>").append(label)
+            return html_el;
           }
+
+          dataMenu.prototype.build_list = function(parent, elements){
+          /*
+          Build a full dropdown list.
+          */
+            for (var e = 0; e < elements.length; e++) {
+              dropdown = this.add_element(elements[e]);
+              $(parent).append(dropdown);
+            }
+          }
+
+          var get_refs = function(key){
+            /*
+            Get dataset's refs.
+            */
+            var datasets = scope.model.get("datasets");
+            var refs = [];
+
+            for (var i = 0; i < datasets.length; i++) {
+              refs.push(datasets[i].ref);
+            }
+            console.log(refs);
+            return refs;
+          }
+
+          var datasets = scope.model.get("datasets")[0];
+          var refs = get_refs(datasets);
 
           var drops = new dataMenu();
-          drops.add_drops($("#menu1"));
+          drops.build_list("#menu1", refs);
 
-          $("#select1").click(function() {
-            console.log("toggled");
+          $("#dropdown-111").click(function() {
+
+            var dataUpdate = function() {
+              var datasets = scope.model.get("datasets")[1];
+              for (var i = 0; i < datasets.length; i++){
+                datasets.push([i]);
+              }
+              return datasets;
+            }
+
+            var datasets = dataUpdate();
+            console.log(datasets);
+
+            scope.start_force(datasets);
+
           });
 
         },
