@@ -157,9 +157,9 @@ define([
                   //var colorUpdate = .data(this.model.get("nodes"))
                   var colorUpdate = d3.interpolate('blue', 'red');
                   //var scope2 = this;
-                  //d3.select(scope.nodes).transition()
-                    //.each("start", function() { d3.select(scope.nodes) })
-                    scope.nodes.attr("fill", function(d){return colorUpdate(d.value)});
+                  d3.selectAll(".graph_node").transition()
+                    .each("start", function() { d3.select(this) })
+                    .attr("fill", function(d){return colorUpdate(d.value)});
                     //return colors;
                 });
         },
@@ -221,7 +221,7 @@ define([
 
             for(var i = 0; i < nodes.length; i++){
               node_names.push(nodes[i].id);
-              console.log(node_names[i]);
+              //console.log(node_names[i]);
 
               if (node_names[i] === numInput) {
                 console.log(node_names[i]);
@@ -269,6 +269,7 @@ define([
             */
             var datasets = scope.model.get("datasets");
             var refs = [];
+            console.log(datasets)
 
             for (var i = 0; i < datasets.length; i++) {
               refs.push(datasets[i].ref);
@@ -293,10 +294,35 @@ define([
               return datasets;
             }
 
-            var datasets = dataUpdate();
-            console.log(datasets);
+            dataUpdate();
+            console.log(dataUpdate());
 
-            scope.start_force(datasets);
+            var get_nodes = function(key) {
+              var datasets = scope.model.get("datasets");
+              var node = [];
+              console.log(datasets);
+
+              for (var i = 0; i < datasets.length; i++) {
+                node.push(datasets[i].nodes);
+              }
+              //console.log(node);
+              return node;
+            }
+
+            var datasets = scope.model.get("datasets")[1];
+            var node = get_nodes(datasets);
+            console.log(node);
+
+            //var nodeUpdate = scope.nodes.data(datasets)
+                //.transition;
+
+            var nodeUpdate = scope.svg.selectAll(".graph_node")
+                .data(datasets)
+                .attr("class", "graph_node")
+                .call(scope.force.drag);
+
+            console.log(nodeUpdate);
+            console.log(scope.nodes);
 
           });
 
