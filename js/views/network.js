@@ -46,10 +46,10 @@ define([
             this.node_shape();
             this.node_text();
             this.node_color();
-            this.size_slider();
+            //this.size_slider();
             this.form();
             this.update_data();
-            this.force_on();
+            //this.force_on();
         },
 
         start_force: function(){
@@ -71,6 +71,8 @@ define([
                 .enter().append("g")
                 .attr("class", "graph_node")
                 .call(this.force.drag);
+                console.log(this.model.get("nodes"));
+
         },
 
         draw_links: function() {
@@ -92,11 +94,18 @@ define([
                 shape: string
                     SVG shape for each node.
             */
+
+            var interpolateRadius = d3.interpolate(5, 25);
+
             this.circles = this.nodes.append("circle")
                 .attr("class", "graph_circle")
                 .attr("id", function(d) {return "node-"+d.index})
                 .attr("node-index", function(d) {return d.index})
-                //.attr("r", this.model.get("node_radius"))
+                .attr("r", function(d){
+                  console.log(d)
+                  return interpolateRadius(d.value) })
+
+                //this.model.get("node_radius"))
 
             var scope = this;
 
@@ -294,35 +303,72 @@ define([
               return datasets;
             }
 
-            dataUpdate();
+            var data2 = dataUpdate();
             console.log(dataUpdate());
 
             var get_nodes = function(key) {
               var datasets = scope.model.get("datasets");
               var node = [];
-              console.log(datasets);
 
               for (var i = 0; i < datasets.length; i++) {
                 node.push(datasets[i].nodes);
               }
-              //console.log(node);
               return node;
             }
 
-            var datasets = scope.model.get("datasets")[1];
-            var node = get_nodes(datasets);
+            var datasets = scope.model.get("datasets");
+            var node = get_nodes(datasets)[1];
             console.log(node);
 
-            //var nodeUpdate = scope.nodes.data(datasets)
-                //.transition;
+// NEW STUFF
+            scope.force.stop()
+            scope.force.nodes(node).start()
+            scope.nodes.data(node)
+              .enter().append("g")
+              .attr("class", "graph_node")
+              .call(scope.force.drag);
 
+            scope.node_shape();
+            scope.node_text();
+/*
             var nodeUpdate = scope.svg.selectAll(".graph_node")
-                .data(datasets)
+                .data(node)
+                .transition()
+                .duration(7000)
+                //.attr("class", "graph_node")
+                //.call(scope.force.drag);
+*/
+            scope.force.on("tick", function () {
+              scope.links
+                  .attr("x1", function(d) { return d.source.x; })
+                  .attr("y1", function(d) { return d.source.y; })
+                  .attr("x2", function(d) { return d.target.x; })
+                  .attr("y2", function(d) { return d.target.y; });
+
+              scope.nodes
+                  .attr("transform", function(d) {
+                      return "translate(" + d.x + "," + d.y + ")";
+                  })
+            })
+                /*.attr("class", "graph_node");
+                .call(scope.force.drag);
+
+                console.log(nodeUpdate);
+
+            var nodeUpdate = scope.nodes;
+              .transition()
+              .duration(7000)
+
+              scope.force.on("tick", function () {
+                nodeUpdate.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+              });
+
+           nodeUpdate = scope.svg.selectAll(".graph_node")
+                .data(node)
                 .attr("class", "graph_node")
                 .call(scope.force.drag);
 
-            console.log(nodeUpdate);
-            console.log(scope.nodes);
+            console.log(nodeUpdate);*/
 
           });
 
