@@ -11,250 +11,251 @@ requirejs([
 
     //var datasets = new Object( data1, data2 );
     // Data plotted in network
-    var data1 = { "ref": "000",
-                  "links": [
-                    {
-                      "source": 0,
-                      "target": 1,
-                      "tsize": 0.029,
-                      "ssize": 0.019
-                    },
-                    {
-                      "source": 0,
-                      "target": 4,
-                      "tsize": 0.55,
-                      "ssize": 0.019
-                    },
-                    {
-                      "source": 0,
-                      "target": 6,
-                      "tsize": 0.332,
-                      "ssize": 0.019
-                    },
-                    {
-                      "source": 1,
-                      "target": 3,
-                      "tsize": 0.057,
-                      "ssize": 0.029
-                    },
-                    {
-                      "source": 1,
-                      "target": 2,
-                      "tsize": 0.486,
-                      "ssize": 0.029
-                    },
-                    {
-                      "source": 2,
-                      "target": 4,
-                      "tsize": 0.55,
-                      "ssize": 0.486
-                    },
-                    {
-                      "source": 2,
-                      "target": 5,
-                      "tsize": 0.01,
-                      "ssize": 0.486
-                    },
-                    {
-                      "source": 3,
-                      "target": 5,
-                      "tsize": 0.01,
-                      "ssize": 0.057
-                    },
-                    {
-                      "source": 3,
-                      "target": 6,
-                      "tsize": 0.332,
-                      "ssize": 0.057
-                    },
-                    {
-                      "source": 4,
-                      "target": 7,
-                      "tsize": 0.089,
-                      "ssize": 0.55
-                    },
-                    {
-                      "source": 5,
-                      "target": 7,
-                      "tsize": 0.089,
-                      "ssize": 0.01
-                    },
-                    {
-                      "source": 6,
-                      "target": 7,
-                      "tsize": 0.089,
-                      "ssize": 0.332
-                    }
-                  ],
-                  "directed": false,
-                  "nodes": [
-                    {
-                      "value": 0.019,
-                      "id": "110",
-                      "name": 0
-                    },
-                    {
-                      "value": 0.029,
-                      "id": "111",
-                      "name": 1
-                    },
-                    {
-                      "value": 0.486,
-                      "id": "101",
-                      "name": 2
-                    },
-                    {
-                      "value": 0.057,
-                      "id": "011",
-                      "name": 3
-                    },
-                    {
-                      "value": 0.55,
-                      "id": "100",
-                      "name": 4
-                    },
-                    {
-                      "value": 0.01,
-                      "id": "001",
-                      "name": 5
-                    },
-                    {
-                      "value": 0.332,
-                      "id": "010",
-                      "name": 6
-                    },
-                    {
-                      "value": 0.089,
-                      "id": "000",
-                      "name": 7
-                    }
-                  ],
-                  "multigraph": false,
-                  "graph": []
-                }
+    var data1 = {
+        "ref":"000",
+        "directed": false,
+        "graph": [],
+        "nodes": [
+            {
+                "name": 0,
+                "value": 0.766,
+                "id": "010"
+            },
+            {
+                "name": 1,
+                "value": 0.803,
+                "id": "011"
+            },
+            {
+                "name": 2,
+                "value": 0.858,
+                "id": "001"
+            },
+            {
+                "name": 3,
+                "value": 0.918,
+                "id": "000"
+            },
+            {
+                "name": 4,
+                "value": 0.077,
+                "id": "111"
+            },
+            {
+                "name": 5,
+                "value": 0.838,
+                "id": "110"
+            },
+            {
+                "name": 6,
+                "value": 0.73,
+                "id": "100"
+            },
+            {
+                "name": 7,
+                "value": 0.749,
+                "id": "101"
+            }
+        ],
+        "links": [
+            {
+                "source": 0,
+                "tsize": 0.803,
+                "ssize": 0.766,
+                "target": 1
+            },
+            {
+                "source": 0,
+                "tsize": 0.918,
+                "ssize": 0.766,
+                "target": 3
+            },
+            {
+                "source": 0,
+                "tsize": 0.838,
+                "ssize": 0.766,
+                "target": 5
+            },
+            {
+                "source": 1,
+                "tsize": 0.858,
+                "ssize": 0.803,
+                "target": 2
+            },
+            {
+                "source": 1,
+                "tsize": 0.077,
+                "ssize": 0.803,
+                "target": 4
+            },
+            {
+                "source": 2,
+                "tsize": 0.918,
+                "ssize": 0.858,
+                "target": 3
+            },
+            {
+                "source": 2,
+                "tsize": 0.749,
+                "ssize": 0.858,
+                "target": 7
+            },
+            {
+                "source": 3,
+                "tsize": 0.73,
+                "ssize": 0.918,
+                "target": 6
+            },
+            {
+                "source": 4,
+                "tsize": 0.749,
+                "ssize": 0.077,
+                "target": 7
+            },
+            {
+                "source": 4,
+                "tsize": 0.838,
+                "ssize": 0.077,
+                "target": 5
+            },
+            {
+                "source": 5,
+                "tsize": 0.73,
+                "ssize": 0.838,
+                "target": 6
+            },
+            {
+                "source": 6,
+                "tsize": 0.749,
+                "ssize": 0.73,
+                "target": 7
+            }
+        ],
+        "multigraph": false
+    };
 
     var data2 = {
-                  "ref": "111",
-                  "links": [
-                    {
-                      "tsize": 0.112,
-                      "target": 5,
-                      "source": 0,
-                      "ssize": 0.213
-                    },
-                    {
-                      "tsize": 0.573,
-                      "target": 6,
-                      "source": 0,
-                      "ssize": 0.213
-                    },
-                    {
-                      "tsize": 0.187,
-                      "target": 7,
-                      "source": 0,
-                      "ssize": 0.213
-                    },
-                    {
-                      "tsize": 0.62,
-                      "target": 4,
-                      "source": 1,
-                      "ssize": 0.179
-                    },
-                    {
-                      "tsize": 0.573,
-                      "target": 6,
-                      "source": 1,
-                      "ssize": 0.179
-                    },
-                    {
-                      "tsize": 0.187,
-                      "target": 7,
-                      "source": 1,
-                      "ssize": 0.179
-                    },
-                    {
-                      "tsize": 0.573,
-                      "target": 6,
-                      "source": 2,
-                      "ssize": 0.539
-                    },
-                    {
-                      "tsize": 0.112,
-                      "target": 5,
-                      "source": 2,
-                      "ssize": 0.539
-                    },
-                    {
-                      "tsize": 0.62,
-                      "target": 4,
-                      "source": 2,
-                      "ssize": 0.539
-                    },
-                    {
-                      "tsize": 0.112,
-                      "target": 5,
-                      "source": 3,
-                      "ssize": 0.132
-                    },
-                    {
-                      "tsize": 0.62,
-                      "target": 4,
-                      "source": 3,
-                      "ssize": 0.132
-                    },
-                    {
-                      "tsize": 0.187,
-                      "target": 7,
-                      "source": 3,
-                      "ssize": 0.132
-                    }
-                  ],
-                  "nodes": [
-                    {
-                      "id": "011",
-                      "name": 0,
-                      "value": 0.213
-                    },
-                    {
-                      "id": "101",
-                      "name": 1,
-                      "value": 0.179
-                    },
-                    {
-                      "id": "000",
-                      "name": 2,
-                      "value": 0.539
-                    },
-                    {
-                      "id": "110",
-                      "name": 3,
-                      "value": 0.132
-                    },
-                    {
-                      "id": "100",
-                      "name": 4,
-                      "value": 0.62
-                    },
-                    {
-                      "id": "010",
-                      "name": 5,
-                      "value": 0.112
-                    },
-                    {
-                      "id": "001",
-                      "name": 6,
-                      "value": 0.573
-                    },
-                    {
-                      "id": "111",
-                      "name": 7,
-                      "value": 0.187
-                    }
-                  ],
-                  "multigraph": false,
-                  "graph": [],
-                  "directed": false
-                }
+        "ref":"111",
+        "directed": false,
+        "graph": [],
+        "nodes": [
+            {
+                "name": 0,
+                "value": 0.203,
+                "id": "010"
+            },
+            {
+                "name": 1,
+                "value": 0.892,
+                "id": "011"
+            },
+            {
+                "name": 2,
+                "value": 0.581,
+                "id": "001"
+            },
+            {
+                "name": 3,
+                "value": 0.641,
+                "id": "000"
+            },
+            {
+                "name": 4,
+                "value": 0.5,
+                "id": "111"
+            },
+            {
+                "name": 5,
+                "value": 0.713,
+                "id": "110"
+            },
+            {
+                "name": 6,
+                "value": 0.415,
+                "id": "100"
+            },
+            {
+                "name": 7,
+                "value": 0.895,
+                "id": "101"
+            }
+        ],
+        "links": [
+            {
+                "source": 0,
+                "tsize": 0.892,
+                "ssize": 0.203,
+                "target": 1
+            },
+            {
+                "source": 0,
+                "tsize": 0.641,
+                "ssize": 0.203,
+                "target": 3
+            },
+            {
+                "source": 0,
+                "tsize": 0.713,
+                "ssize": 0.203,
+                "target": 5
+            },
+            {
+                "source": 1,
+                "tsize": 0.581,
+                "ssize": 0.892,
+                "target": 2
+            },
+            {
+                "source": 1,
+                "tsize": 0.5,
+                "ssize": 0.892,
+                "target": 4
+            },
+            {
+                "source": 2,
+                "tsize": 0.641,
+                "ssize": 0.581,
+                "target": 3
+            },
+            {
+                "source": 2,
+                "tsize": 0.895,
+                "ssize": 0.581,
+                "target": 7
+            },
+            {
+                "source": 3,
+                "tsize": 0.415,
+                "ssize": 0.641,
+                "target": 6
+            },
+            {
+                "source": 4,
+                "tsize": 0.895,
+                "ssize": 0.5,
+                "target": 7
+            },
+            {
+                "source": 4,
+                "tsize": 0.713,
+                "ssize": 0.5,
+                "target": 5
+            },
+            {
+                "source": 5,
+                "tsize": 0.415,
+                "ssize": 0.713,
+                "target": 6
+            },
+            {
+                "source": 6,
+                "tsize": 0.895,
+                "ssize": 0.415,
+                "target": 7
+            }
+        ],
+        "multigraph": false
+    }
 
 
     var data = [data1,data2];
