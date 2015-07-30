@@ -140,7 +140,7 @@ define([
                 /*
                 Add text to each node based on each node's "id".
                 */
-                var interpolateRadius = d3.interpolate(5, 25);
+                var interpolateRadius = d3.interpolate(1, 15);
 
                 this.labels = this.nodes.append("text")
                 .attr("class", "graph_text")
@@ -176,7 +176,7 @@ define([
 
             size_slider: function() {
                 var scope = this;
-                var interpolateRadius = d3.interpolate(5, 25);
+                var interpolateRadius = d3.interpolate(1, 15);
 
                 //this.circles
                 //.attr("r", function(d) {return interpolateRadius(d.value)});
@@ -186,15 +186,16 @@ define([
 
                 $(function() {
                     $( "#slider" ).slider({
-                        value: 1.5,
+                        value: 1,
                         min: 0,
                         max: 3,
                         step: .5,
                         slide: function( event, ui ) {
                             $( "#amount" ).val( ui.value );
-                            scope.labels
+                            this.slidervalue = ui.value;
+                            scope.labels.transition().duration(750)
                             .attr("dx", function(d) {return interpolateRadius(d.value * ui.value)});
-                            scope.circles
+                            scope.circles.transition().duration(750)
                             .attr("r", function(d) {return interpolateRadius(d.value * ui.value)});
                         }
                     });
@@ -227,7 +228,7 @@ define([
                     var nodes = scope.model.get("nodes");
                     var node_names = [];
 
-                    console.log(nodes[2]);
+                    //console.log(nodes[2]);
 
                     for(var i = 0; i < nodes.length; i++){
                         node_names.push(nodes[i].id);
@@ -282,20 +283,22 @@ define([
                 }
 
                 var get_refs = function(key){
-                    /*
-                    Get dataset's refs.
-                    */
+                    //
+                    //Get dataset's refs.
+                    //
+
+                    //this.index = key.data;
+
                     var datasets = scope.model.get("datasets");
                     var refs = [];
-                    console.log(datasets)
+                    console.log(datasets);
 
                     for (var i = 0; i < datasets.length; i++) {
                         refs.push(datasets[i].ref);
                     }
                     console.log(refs);
                     return refs;
-                };
-
+                }
 
                 var click_reference = function(d){
                     //
@@ -303,23 +306,12 @@ define([
                     // is selected from dropdown menu.
                     //
                     var index = d.data;
-
-                    var dataUpdate = function() {
-                      var datasets = scope.model.get("datasets")[index];
-                      for (var i = 0; i < datasets.length; i++){
-                        datasets.push([i]);
-                      }
-                      return datasets;
-                    }
-
-                    var dataSelect = dataUpdate();
-                    console.log(dataSelect);
-
-                    var get_nodes = function(key) {
+                    var dataSelect = scope.model.get("datasets")[index];
+/*
+                    var get_nodes = function(datasets) {
                         //
+                        // Takes reference key and returns array of links from dataset[key].
                         //
-                        //
-                        var datasets = scope.model.get("datasets");
                         var node = [];
 
                         for (var i = 0; i < datasets.length; i++) {
@@ -327,24 +319,25 @@ define([
                         }
                         return node;
                     }
-
-                    var datasets = scope.model.get("datasets");
-                    var node = get_nodes(datasets)[index];
-
+*/
+                    //var node = get_nodes(dataSelect);
+                    var node = dataSelect["nodes"];
                     console.log(node);
+/*
+                    var node_value = function(nodes) {
+                        //
+                        // Takes the nodes, and specifies the value
+                        //
+                        var vals = [];
 
-                    var node_value = function() {
-                        var nodeValues = [];
-
-                        for (var i = 0; i < node.length; i++) {
-                            nodeValues.push(node[i].value);
+                        for (var i = 0; i < nodes.length; i++) {
+                            vals.push(nodes[i].value);
                         }
-                        return nodeValues;
+                        return vals;
                     }
 
-                    var nodeValues = node_value(datasets);
-                    console.log(nodeValues);
-
+                    var nodeValues = node_value(node);
+*/
                     var get_links = function(key) {
                         //
                         // Takes reference key, returns array of links from dataset[key].
@@ -356,56 +349,62 @@ define([
                             link.push(datasets[i].links);
                         }
                         return link;
-                    };
+                    }
 
                     var link = get_links(datasets)[index];
+                    //console.log(link);
 
                     var old_nodes = scope.force.nodes();
                     var old_links = scope.force.links();
-                    console.log("Old node data:");
-                    console.log(old_nodes);
+                    //console.log(old_links);
+                    //console.log(old_nodes);
                     //console.log(node)
 
                     // function that takes old nodes, and updates value with
                     // new node value... return new_nodes
 
-                    var new_values = function () {
-                        //var datasets = old_nodes;
-                        var new_nodes = nodeValues;
-                        var values = [];
+                    var make_new_nodes = function (data1, data2) {
+                        //
+                        // Takes the old node values, and changes them to the
+                        // new node's value.
+                        //
+                        var new_nodes = [];
 
                         for (var i = 0; i < old_nodes.length; i++) {
-                            values.push(old_nodes[i].value);
+                            var combined = $.extend({}, data1[i], data2[i]);
+                            new_nodes.push(combined);
                         }
+                        return new_nodes;
+                    }
 
-                        //var valueUpdate =
-                        return values;
-                    };
-
-                    var new_nodes = new_values();
-                    //new_nodes = nodeValues;
+                    var new_nodes = make_new_nodes(old_nodes, node);
                     console.log(new_nodes);
 
-                    scope.force.stop()
-                    scope.force.nodes(node)
-                                .links(link)
-                                .start()
+                    scope.size_slider();
 
-                    var nodeUpdate = scope.nodes.data(node)
+                    scope.force.stop();
+                    scope.force.nodes(new_nodes)
+                               .links(link)
+                               .start();
+
+                    var nodeUpdate = scope.nodes.data(new_nodes)
                         .attr("class", "graph_node")
                         .call(scope.force.drag);
 
-                    nodeUpdate.select("circle")
+                    nodeUpdate.select("circle").transition().duration(1000)
                         .attr("class", "graph_circle")
                         .attr("id", function(d) {return "node-"+d.index})
                         .attr("node-index", function(d) {return d.index})
                         .attr("r", function(d){ return d3.interpolate(1, 15)(d.value) })
 
-                    nodeUpdate.select("text")
+                    nodeUpdate.select("text").transition().duration(1000)
                         .attr("class", "graph_text")
                         .attr("dx", function(d) {return d3.interpolate(1, 15)(d.value)})
                         .attr("dy", ".35em")
                         .text(function(d) { return d.id; });
+
+                    nodeUpdate.transition().duration(1000)
+                        .attr("fill", function(d){ return d3.interpolate('orange', 'purple')(d.value)});
 
                     var linkUpdate = scope.links.data(link)
                         .attr("class", "graph_link");
