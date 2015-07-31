@@ -16,12 +16,10 @@ define([
 
     var NetworkView = backbone.View.extend({
 
-        //element: "#network_viewer",
-
         initialize: function(){
-            /*
-            Initialize network view
-            */
+            //
+            //Initialize network view
+            //
             this.element = "#network_viewer";
 
             // Parameters for building network
@@ -53,9 +51,9 @@ define([
         },
 
         start_force: function(){
-            /*
-            Starts D3's force network simulation
-            */
+            //
+            //Starts D3's force network simulation
+            //
             this.force
             .nodes(this.model.get("nodes"))
             .links(this.model.get("links"))
@@ -63,9 +61,9 @@ define([
         },
 
         draw_nodes: function() {
-            /*
-            Add node data to D3 force simulation.
-            */
+            //
+            //Add node data to D3 force simulation.
+            //
             this.nodes = this.svg.selectAll(".graph_node")
             .data(this.model.get("nodes"))
             .enter().append("g")
@@ -77,9 +75,9 @@ define([
         },
 
         draw_links: function() {
-            /*
-            Add link data to D3 force simulation.
-            */
+            //
+            //Add link data to D3 force simulation.
+            //
             this.links = this.svg.selectAll(".graph_link")
             .data(this.model.get("links"))
             .enter().append("line")
@@ -102,22 +100,13 @@ define([
             .attr("class", "graph_circle")
             .attr("id", function(d) {return "node-"+d.index})
             .attr("node-index", function(d) {return d.index})
-            .attr("r", function(d){
-                //console.log(d)
-                return interpolateRadius(d.value) })
-
-                //this.model.get("node_radius"))
-
-                /*$("#sizebutton").click(function(){
-                scope.circles = scope.nodes.append("circle")
-                .attr("r", 20);
-                });*/
+            .attr("r", function(d){ return interpolateRadius(d.value) })
             },
 
             force_on: function() {
-                /*
-                How to handle each tick in a force simulation.
-                */
+                //
+                //How to handle each tick in a force simulation.
+                //
                 var that = this;
 
                 this.force.on("tick", function () {
@@ -137,9 +126,9 @@ define([
             },
 
             node_text: function(){
-                /*
-                Add text to each node based on each node's "id".
-                */
+                //
+                //Add text to each node based on each node's "id".
+                //
                 var interpolateRadius = d3.interpolate(1, 15);
 
                 this.labels = this.nodes.append("text")
@@ -153,36 +142,26 @@ define([
             },
 
             node_color: function() {
-                /*
-                Add color to each node based on the node's "value".
-                */
+                //
+                //Add color to each node based on the node's "value".
+                //
                 var colors = d3.interpolate('orange', 'purple');
-                this.nodes
-                .attr("fill", function(d){ return colors(d.value)});
 
-                var scope = this;
+                this.nodes
+                    .attr("fill", function(d){ return colors(d.value)});
 
                 $('#colorbutton').click(function() {
-                    //$(".graph_node").css('fill','violet');
-                    //var colorUpdate = .data(this.model.get("nodes"))
                     var colorUpdate = d3.interpolate('blue', 'red');
-                    //var scope2 = this;
+
                     d3.selectAll(".graph_node").transition()
-                    .each("start", function() { d3.select(this) })
-                    .attr("fill", function(d){return colorUpdate(d.value)});
-                    //return colors;
+                        .each("start", function() { d3.select(this) })
+                        .attr("fill", function(d){return colorUpdate(d.value)});
                 });
             },
 
             size_slider: function() {
                 var scope = this;
                 var interpolateRadius = d3.interpolate(1, 15);
-
-                //this.circles
-                //.attr("r", function(d) {return interpolateRadius(d.value)});
-
-                //this.labels
-                //.attr("dx", function(d) {return interpolateRadius(d.value)});
 
                 $(function() {
                     $( "#slider" ).slider({
@@ -204,6 +183,7 @@ define([
             },
 
             form: function() {
+
                 // Define scope.
                 var scope = this;
 
@@ -228,11 +208,8 @@ define([
                     var nodes = scope.model.get("nodes");
                     var node_names = [];
 
-                    //console.log(nodes[2]);
-
                     for(var i = 0; i < nodes.length; i++){
                         node_names.push(nodes[i].id);
-                        //console.log(node_names[i]);
 
                         if (node_names[i] === numInput) {
                             console.log(node_names[i]);
@@ -247,13 +224,13 @@ define([
 
                 var scope = this;
 
-                // Create dataMenu object for
+                // Create dataMenu object for dropdown menu.
                 var dataMenu = function() {}
 
                 dataMenu.prototype.add_element = function(element) {
-                    /*
-                    Create an element in dropdown.
-                    */
+                    //
+                    //Create an element in dropdown.
+                    //
                     // Construct dropdown label.
                     label = $("<a>").attr("id", "dropdown-" + element)
                     .attr("href","#")
@@ -286,17 +263,12 @@ define([
                     //
                     //Get dataset's refs.
                     //
-
-                    //this.index = key.data;
-
                     var datasets = scope.model.get("datasets");
                     var refs = [];
-                    console.log(datasets);
 
                     for (var i = 0; i < datasets.length; i++) {
                         refs.push(datasets[i].ref);
                     }
-                    console.log(refs);
                     return refs;
                 }
 
@@ -306,110 +278,38 @@ define([
                     // is selected from dropdown menu.
                     //
                     var index = d.data;
-                    var dataSelect = scope.model.get("datasets")[index];
-/*
-                    var get_nodes = function(datasets) {
+                    var new_data = scope.model.get("datasets")[index];
+
+                    var new_nodes = new_data["nodes"];
+                    var new_links = new_data["links"];
+
+                    var change_node_value = function(data) {
                         //
-                        // Takes reference key and returns array of links from dataset[key].
+                        // Changes model's node values inplace.
                         //
-                        var node = [];
-
-                        for (var i = 0; i < datasets.length; i++) {
-                            node.push(datasets[i].nodes);
-                        }
-                        return node;
-                    }
-*/
-                    //var node = get_nodes(dataSelect);
-                    var node = dataSelect["nodes"];
-                    console.log(node);
-/*
-                    var node_value = function(nodes) {
-                        //
-                        // Takes the nodes, and specifies the value
-                        //
-                        var vals = [];
-
-                        for (var i = 0; i < nodes.length; i++) {
-                            vals.push(nodes[i].value);
-                        }
-                        return vals;
-                    }
-
-                    var nodeValues = node_value(node);
-*/
-                    var get_links = function(key) {
-                        //
-                        // Takes reference key, returns array of links from dataset[key].
-                        //
-                        var datasets = scope.model.get("datasets");
-                        var link = [];
-
-                        for (var i = 0; i < datasets.length; i++) {
-                            link.push(datasets[i].links);
-                        }
-                        return link;
-                    }
-
-                    var link = get_links(datasets)[index];
-                    //console.log(link);
-
-                    var old_nodes = scope.force.nodes();
-                    var old_links = scope.force.links();
-                    //console.log(old_links);
-                    //console.log(old_nodes);
-                    //console.log(node)
-
-                    // function that takes old nodes, and updates value with
-                    // new node value... return new_nodes
-
-                    var make_new_nodes = function (data1, data2) {
-                        //
-                        // Takes the old node values, and changes them to the
-                        // new node's value.
-                        //
-                        var new_nodes = [];
-
+                        var old_nodes = scope.model.get("nodes");
                         for (var i = 0; i < old_nodes.length; i++) {
-                            var combined = $.extend({}, data1[i], data2[i]);
-                            new_nodes.push(combined);
+                            old_nodes[i].value = data[i].value;
                         }
-                        return new_nodes;
                     }
 
-                    var new_nodes = make_new_nodes(old_nodes, node);
-                    console.log(new_nodes);
+                    // Change the nodes inplace
+                    change_node_value(new_nodes);
 
+                    // Lets the slider keep track of the new data size.
                     scope.size_slider();
 
-                    scope.force.stop();
-                    scope.force.nodes(new_nodes)
-                               .links(link)
-                               .start();
-
-                    var nodeUpdate = scope.nodes.data(new_nodes)
-                        .attr("class", "graph_node")
-                        .call(scope.force.drag);
+                    var nodeUpdate = scope.nodes;
 
                     nodeUpdate.select("circle").transition().duration(1000)
-                        .attr("class", "graph_circle")
-                        .attr("id", function(d) {return "node-"+d.index})
-                        .attr("node-index", function(d) {return d.index})
-                        .attr("r", function(d){ return d3.interpolate(1, 15)(d.value) })
+                        .attr("r", function(d){ return d3.interpolate(1, 15)(d.value) });
 
                     nodeUpdate.select("text").transition().duration(1000)
-                        .attr("class", "graph_text")
-                        .attr("dx", function(d) {return d3.interpolate(1, 15)(d.value)})
-                        .attr("dy", ".35em")
-                        .text(function(d) { return d.id; });
+                        .attr("dx", function(d) {return d3.interpolate(1, 15)(d.value)});
 
                     nodeUpdate.transition().duration(1000)
                         .attr("fill", function(d){ return d3.interpolate('orange', 'purple')(d.value)});
 
-                    var linkUpdate = scope.links.data(link)
-                        .attr("class", "graph_link");
-
-                    //scope.force_on();
                 }
 
                 var datasets = scope.model.get("datasets")[0];
