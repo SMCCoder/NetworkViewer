@@ -41,6 +41,7 @@ define([
             this.start_force();
             this.draw_links();
             this.draw_nodes();
+            this.update_link();
             this.node_shape();
             this.node_text();
             this.node_color();
@@ -80,7 +81,17 @@ define([
                 .data(this.model.get("links"))
               .enter().append("line")
                 .attr("class", "graph_link")
-                //.attr("id", blaha blah blah);
+                .attr("id", function(d) {return "link-"+d.source.name+"-"+d.target.name})
+                .style("stroke-width", 3);
+        },
+
+        update_link: function() {
+            /*this.links_width = this.links.append("rect")
+                .attr("width", 30)
+                .attr("height", 80);
+
+            this.links_text = this.links.append("text")
+                .text("111");*/
         },
 
         node_shape: function(shape) {
@@ -99,13 +110,13 @@ define([
                 .attr("class", "graph_circle")
                 .attr("id", function(d) {return "node-"+d.index})
                 .attr("node-index", function(d) {return d.index})
-                .attr("r", function(d){ return interpolateRadius(d.value) })
+                .attr("r", function(d){ return interpolateRadius(d.value) });
 
             },
 
             force_on: function() {
                 //
-                //How to handle each tick in a force simulation.
+                // How to handle each tick in a force simulation.
                 //
                 var scope = this;
 
