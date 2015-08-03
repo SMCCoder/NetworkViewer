@@ -27,8 +27,7 @@ define([
         },
 
         initialize: function(data){
-            // Data is going to be an array of objects
-            // for loop to find data of interest and set nodes and links
+            // Data is going to be an array of objects.
             this.set({
               "datasets": data,
             })
@@ -36,15 +35,13 @@ define([
             // Make DEEP copy (first argument set to true) of first set
             // of data for initializing our model. Copy is necessary to
             // avoid pointing with reference.
-            var data_copy = $.extend(true,{}, data[0]);
+            var data_copy = $.extend(true, {}, data[0]);
 
             this.set({
                 "nodes": data_copy.nodes,
                 "links": data_copy.links,
                 "ref": data_copy.ref
             })
-
-
 
         },
 

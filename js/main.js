@@ -7,9 +7,6 @@ requirejs([
     'js/views/modal'
 ], function($, d3, NetworkModel, NetworkView, NetworkModal) {
 
-    //var datasets = [data1, data2]
-
-    //var datasets = new Object( data1, data2 );
     // Data plotted in network
     var data1 = {
         "ref":"000",
@@ -257,132 +254,8 @@ requirejs([
         "multigraph": false
     }
 
-    var data3 = {
-        "ref":"222",
-        "directed": false,
-        "graph": [],
-        "nodes": [
-            {
-                "name": 0,
-                "value": 0.453,
-                "id": "010"
-            },
-            {
-                "name": 1,
-                "value": 0.252,
-                "id": "011"
-            },
-            {
-                "name": 2,
-                "value": 0.121,
-                "id": "001"
-            },
-            {
-                "name": 3,
-                "value": 0.64,
-                "id": "000"
-            },
-            {
-                "name": 4,
-                "value": 0.146,
-                "id": "111"
-            },
-            {
-                "name": 5,
-                "value": 0.389,
-                "id": "110"
-            },
-            {
-                "name": 6,
-                "value": 0.893,
-                "id": "100"
-            },
-            {
-                "name": 7,
-                "value": 0.123,
-                "id": "101"
-            }
-        ],
-        "links": [
-            {
-                "source": 0,
-                "tsize": 0.252,
-                "ssize": 0.453,
-                "target": 1
-            },
-            {
-                "source": 0,
-                "tsize": 0.121,
-                "ssize": 0.252,
-                "target": 3
-            },
-            {
-                "source": 0,
-                "tsize": 0.64,
-                "ssize": 0.121,
-                "target": 5
-            },
-            {
-                "source": 1,
-                "tsize": 0.146,
-                "ssize": 0.64,
-                "target": 2
-            },
-            {
-                "source": 1,
-                "tsize": 0.389,
-                "ssize": 0.146,
-                "target": 4
-            },
-            {
-                "source": 2,
-                "tsize": 0.641,
-                "ssize": 0.581,
-                "target": 3
-            },
-            {
-                "source": 2,
-                "tsize": 0.895,
-                "ssize": 0.581,
-                "target": 7
-            },
-            {
-                "source": 3,
-                "tsize": 0.415,
-                "ssize": 0.641,
-                "target": 6
-            },
-            {
-                "source": 4,
-                "tsize": 0.895,
-                "ssize": 0.5,
-                "target": 7
-            },
-            {
-                "source": 4,
-                "tsize": 0.713,
-                "ssize": 0.5,
-                "target": 5
-            },
-            {
-                "source": 5,
-                "tsize": 0.415,
-                "ssize": 0.713,
-                "target": 6
-            },
-            {
-                "source": 6,
-                "tsize": 0.895,
-                "ssize": 0.415,
-                "target": 7
-            }
-        ],
-        "multigraph": false
-    }
+    var data = [data1,data2];
 
-
-
-    var data = [data1,data2,data3];
     // Initializing backbone model for network app.
     this.network_model = new NetworkModel( data );
 

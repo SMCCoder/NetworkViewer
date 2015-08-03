@@ -55,9 +55,9 @@ define([
             //Starts D3's force network simulation
             //
             this.force
-            .nodes(this.model.get("nodes"))
-            .links(this.model.get("links"))
-            .start();
+                .nodes(this.model.get("nodes"))
+                .links(this.model.get("links"))
+                .start();
         },
 
         draw_nodes: function() {
@@ -65,12 +65,10 @@ define([
             //Add node data to D3 force simulation.
             //
             this.nodes = this.svg.selectAll(".graph_node")
-            .data(this.model.get("nodes"))
-            .enter().append("g")
-            .attr("class", "graph_node")
-            .call(this.force.drag);
-
-            console.log(this.model.get("nodes"));
+                .data(this.model.get("nodes"))
+              .enter().append("g")
+                .attr("class", "graph_node")
+                .call(this.force.drag);
 
         },
 
@@ -79,9 +77,10 @@ define([
             //Add link data to D3 force simulation.
             //
             this.links = this.svg.selectAll(".graph_link")
-            .data(this.model.get("links"))
-            .enter().append("line")
-            .attr("class", "graph_link");
+                .data(this.model.get("links"))
+              .enter().append("line")
+                .attr("class", "graph_link")
+                //.attr("id", blaha blah blah);
         },
 
         node_shape: function(shape) {
@@ -97,26 +96,27 @@ define([
             var interpolateRadius = d3.interpolate(1, 15);
 
             this.circles = this.nodes.append("circle")
-            .attr("class", "graph_circle")
-            .attr("id", function(d) {return "node-"+d.index})
-            .attr("node-index", function(d) {return d.index})
-            .attr("r", function(d){ return interpolateRadius(d.value) })
+                .attr("class", "graph_circle")
+                .attr("id", function(d) {return "node-"+d.index})
+                .attr("node-index", function(d) {return d.index})
+                .attr("r", function(d){ return interpolateRadius(d.value) })
+
             },
 
             force_on: function() {
                 //
                 //How to handle each tick in a force simulation.
                 //
-                var that = this;
+                var scope = this;
 
                 this.force.on("tick", function () {
-                    that.links
+                    scope.links
                     .attr("x1", function(d) { return d.source.x; })
                     .attr("y1", function(d) { return d.source.y; })
                     .attr("x2", function(d) { return d.target.x; })
                     .attr("y2", function(d) { return d.target.y; });
 
-                    that.nodes
+                    scope.nodes
                     .attr("transform", function(d) {
                         return "translate(" + d.x + "," + d.y + ")";
                     })
@@ -132,11 +132,10 @@ define([
                 var interpolateRadius = d3.interpolate(1, 15);
 
                 this.labels = this.nodes.append("text")
-                .attr("class", "graph_text")
-                .attr("dx", function(d) {return interpolateRadius(d.value)})
-                .attr("dy", ".35em")
-
-                .text(function(d) { return d.id; });
+                    .attr("class", "graph_text")
+                    .attr("dx", function(d) {return interpolateRadius(d.value)})
+                    .attr("dy", ".35em")
+                    .text(function(d) { return d.id; });
 
                 this.force_on();
             },
@@ -171,11 +170,10 @@ define([
                         step: .5,
                         slide: function( event, ui ) {
                             $( "#amount" ).val( ui.value );
-                            this.slidervalue = ui.value;
-                            scope.labels.transition().duration(750)
-                            .attr("dx", function(d) {return interpolateRadius(d.value * ui.value)});
-                            scope.circles.transition().duration(750)
-                            .attr("r", function(d) {return interpolateRadius(d.value * ui.value)});
+                            scope.labels.transition().duration(300)
+                                .attr("dx", function(d) {return interpolateRadius(d.value * ui.value)});
+                            scope.circles.transition().duration(300)
+                                .attr("r", function(d) {return interpolateRadius(d.value * ui.value)});
                         }
                     });
                     $( "#amount" ).val( $( "#slider" ).slider( "value" ) );
@@ -193,7 +191,7 @@ define([
                     for(var i = 0; i<nodes.length; i++){
                         node_names.push(nodes[i].id);
                     }
-                    console.log(node_names);
+
                     return node_names;
                 }
 
