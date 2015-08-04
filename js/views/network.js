@@ -41,8 +41,8 @@ define([
             this.start_force();
             this.draw_links();
             this.draw_nodes();
-            this.update_link();
             this.node_shape();
+            this.draw_trajectory();
             this.node_text();
             this.node_color();
             this.size_slider();
@@ -81,17 +81,65 @@ define([
                 .data(this.model.get("links"))
               .enter().append("line")
                 .attr("class", "graph_link")
-                .attr("id", function(d) {return "link-"+d.source.name+"-"+d.target.name})
-                .style("stroke-width", 3);
+                .attr("id", function(d) {return "link-"+d.source.name+"-"+d.target.name});
+                //.style("stroke-width", 3);
         },
 
-        update_link: function() {
-            /*this.links_width = this.links.append("rect")
-                .attr("width", 30)
-                .attr("height", 80);
+        update_link_width: function() {
+            this.links
+                .style("stroke-width", 5);
+        },
 
-            this.links_text = this.links.append("text")
-                .text("111");*/
+        update_link_color: function() {
+            this.links
+                .style("opacity", 0.5);
+        },
+
+        draw_trajectory: function(d) {
+            var traj = {
+                            "source": 1,
+                            "target": 4,
+                            "paths": [
+                                        {
+                                            "index": 1,
+                                            "weight": 1,
+                                            "rank": 1,
+                                            "nodes": [1, 2, 4]
+                                        },
+                                        {
+                                            "index": 2,
+                                            "weight": 0.5,
+                                            "rank": 2,
+                                            "nodes": [1, 3, 4]
+                                        },
+                                     ]
+                        };
+            var scope = this;
+            //this.nodes.click(this.update_link_color(), this.update_link_width());
+            var datalinks = this.model.get("links")[1];
+            console.log(datalinks);
+
+            //var node = d.data;
+            //console.log(node);
+
+            /*this.links// = this.svg.selectAll(".graph_link")
+                .data(this.model.get("links"))
+              //.enter().append("line")
+                .attr("class", "graph_link")
+                .style("stroke-width", 5);*/
+
+            /*var trajlinks = [];
+
+            for (var i = 0; i < datalinks.length; i++){
+                trajlinks.push(datalinks[i].name);
+            }
+            console.log(trajlinks);
+            return trajlinks; */
+            /*$("#node-1").hover(function(){
+                scope.update_link_width();
+            });*/
+            //("#link-0-1")
+            //    .style("stroke-width", 5);
         },
 
         node_shape: function(shape) {
@@ -244,6 +292,7 @@ define([
                     label = $("<a>").attr("id", "dropdown-" + element)
                     .attr("href","#")
                     .text(element);
+                    console.log(element);
 
                     // Construct html element here
                     html_el = $("<li>").append(label)
@@ -299,6 +348,7 @@ define([
                         var old_nodes = scope.model.get("nodes");
                         for (var i = 0; i < old_nodes.length; i++) {
                             old_nodes[i].value = data[i].value;
+                            console.log(data[i].value);
                         }
                     }
 
