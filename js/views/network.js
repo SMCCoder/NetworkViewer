@@ -42,12 +42,25 @@ define([
             this.draw_links();
             this.draw_nodes();
             this.node_shape();
-            this.draw_trajectory();
+            //this.draw_trajectory();
             this.node_text();
             this.node_color();
             this.size_slider();
             this.form();
             this.update_data();
+
+            // Click function for trajectory
+            var traj = this.model.get("trajectories");
+            console.log(traj.source);
+
+            var scope = this;
+
+            $("#node_"+traj.source).click(traj, function(d){
+                scope.draw_trajectory(d.data);
+            });
+
+            //this.update_link_width();
+            //this.update_link_color();
 
         },
 
@@ -69,8 +82,8 @@ define([
                 .data(this.model.get("nodes"))
               .enter().append("g")
                 .attr("class", "graph_node")
+                .attr("id", function(d) {return "node_"+d.name})
                 .call(this.force.drag);
-
         },
 
         draw_links: function() {
@@ -81,65 +94,80 @@ define([
                 .data(this.model.get("links"))
               .enter().append("line")
                 .attr("class", "graph_link")
-                .attr("id", function(d) {return "link-"+d.source.name+"-"+d.target.name});
-                //.style("stroke-width", 3);
+                .attr("id", function(d) {return "link_"+d.source.name+"_"+d.target.name});
+                //.style("stroke-opacity", .9);
         },
 
-        update_link_width: function() {
-            this.links
-                .style("stroke-width", 5);
-        },
+        update_link_width: function(links) {
+            // Given an array of sources and targets, change their width.
+            // Parameter:
+            // ---------
+            // links: array
+            //      [[source,target], [source,target]]
 
-        update_link_color: function() {
-            this.links
-                .style("opacity", 0.5);
-        },
+            links = this.model.get("links");
 
-        draw_trajectory: function(d) {
-            var traj = {
-                            "source": 1,
-                            "target": 4,
-                            "paths": [
-                                        {
-                                            "index": 1,
-                                            "weight": 1,
-                                            "rank": 1,
-                                            "nodes": [1, 2, 4]
-                                        },
-                                        {
-                                            "index": 2,
-                                            "weight": 0.5,
-                                            "rank": 2,
-                                            "nodes": [1, 3, 4]
-                                        },
-                                     ]
-                        };
-            var scope = this;
-            //this.nodes.click(this.update_link_color(), this.update_link_width());
-            var datalinks = this.model.get("links")[1];
-            console.log(datalinks);
+            for (var i = 0; i < links.length; i++) {
 
-            //var node = d.data;
-            //console.log(node);
-
-            /*this.links// = this.svg.selectAll(".graph_link")
-                .data(this.model.get("links"))
-              //.enter().append("line")
-                .attr("class", "graph_link")
-                .style("stroke-width", 5);*/
-
-            /*var trajlinks = [];
-
-            for (var i = 0; i < datalinks.length; i++){
-                trajlinks.push(datalinks[i].name);
+                $("#link_"+links[i].source.name+"_"+links[i].target.name)
+                    .css("stroke-width", 5);
             }
-            console.log(trajlinks);
-            return trajlinks; */
-            /*$("#node-1").hover(function(){
-                scope.update_link_width();
-            });*/
-            //("#link-0-1")
-            //    .style("stroke-width", 5);
+        },
+
+        update_link_color: function(links) {
+            // Given an array of sources and targets, change their opacity.
+            // Parameter:
+            // ---------
+            // links: array
+            //      [[source,target], [source,target]]
+
+            links = this.model.get("links");
+
+            for (var i = 0; i < links.length; i++) {
+
+                $("#link_"+links[i].source.name+"_"+links[i].target.name)
+                    .css("stroke-opacity", "0.9");
+            }
+        },
+
+
+        draw_trajectory: function(trajectory) {
+            // Parse trajectory object and change edges appropriately
+
+            // Identify edges to change
+            // Should return this -->[[0,1], [1,4]]
+
+            // Change those edges
+
+            console.log(trajectory);
+
+            console.log(trajectory.paths);
+
+            for (var i = 0; i < trajectory.paths.length; i++){
+                
+            }
+
+            console.log("#link_"+trajectory.paths);
+
+            //$("#link_")
+
+            /*this.dataLink = this.model.get("links");
+
+            for(var i = 0; i < this.dataLink.length; i++) {
+
+                var scope = this;
+
+                var n = this.dataLink[i].source.name;
+                console.log(n);
+
+                $("#node_"+this.dataLink[i].source.name).click(function(){
+
+                    $("#link_"+scope.dataLink[i].source.name+"_"+scope.dataLink[i].target.name)
+                        .css("stroke-width", 5);
+
+                });
+            }*/
+
         },
 
         node_shape: function(shape) {
@@ -269,7 +297,7 @@ define([
                         node_names.push(nodes[i].id);
 
                         if (node_names[i] === numInput) {
-                            console.log(node_names[i]);
+                            $("#node_"+nodes[i].name).css("fill","blue")
                         }
                     }
 
@@ -292,7 +320,6 @@ define([
                     label = $("<a>").attr("id", "dropdown-" + element)
                     .attr("href","#")
                     .text(element);
-                    console.log(element);
 
                     // Construct html element here
                     html_el = $("<li>").append(label)
@@ -348,7 +375,6 @@ define([
                         var old_nodes = scope.model.get("nodes");
                         for (var i = 0; i < old_nodes.length; i++) {
                             old_nodes[i].value = data[i].value;
-                            console.log(data[i].value);
                         }
                     }
 

@@ -26,10 +26,14 @@ define([
             "add_node_names": true,
         },
 
-        initialize: function(data){
+        initialize: function(data, trajectory){
             // Data is going to be an array of objects.
             this.set({
               "datasets": data,
+            })
+
+            this.set({
+                "trajectories": trajectory,
             })
 
             // Make DEEP copy (first argument set to true) of first set

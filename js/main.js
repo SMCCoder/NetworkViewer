@@ -254,10 +254,23 @@ requirejs([
         "multigraph": false
     }
 
+    var trajectory = {
+            "source": 0,
+            "target": 4,
+            "paths": [
+                        {
+                            "index": 1,
+                            "weight": 1,
+                            "rank": 1,
+                            "nodes": [0,1,4]
+                        }
+                     ]
+        };
+
     var data = [data1,data2];
 
     // Initializing backbone model for network app.
-    this.network_model = new NetworkModel( data );
+    this.network_model = new NetworkModel( data, trajectory );
 
     // Initializing all backbone views.
     this.network_modal = new NetworkModal();

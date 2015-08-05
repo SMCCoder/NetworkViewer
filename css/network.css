@@ -67,6 +67,26 @@ form {
   margin-left: 20;
 }
 
+#ui-id-1 {
+    border-radius: 5px;
+    /*background-color: lightblue;*/
+    /*border: none;*/
+    box-shadow: 0px 5px 25px -7px #474747;
+}
+
+.ui-autocomplete {
+    border: none;
+    /*background-color: lightblue;*/
+}
+
+/*.graph_node:hover{
+    fill: blue;
+}*/
+
+/*#link-0-1 {
+    stroke-width: 3;
+}*/
+
 /*#gobutton {
   height: 28px;
   width:50px;
