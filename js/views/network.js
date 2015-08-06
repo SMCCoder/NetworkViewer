@@ -42,7 +42,6 @@ define([
             this.draw_links();
             this.draw_nodes();
             this.node_shape();
-            //this.draw_trajectory();
             this.node_text();
             this.node_color();
             this.size_slider();
@@ -51,16 +50,12 @@ define([
 
             // Click function for trajectory
             var traj = this.model.get("trajectories");
-            console.log(traj.source);
 
             var scope = this;
 
             $("#node_"+traj.source).click(traj, function(d){
                 scope.draw_trajectory(d.data);
             });
-
-            //this.update_link_width();
-            //this.update_link_color();
 
         },
 
@@ -104,14 +99,12 @@ define([
             // ---------
             // links: array
             //      [[source,target], [source,target]]
-
-            links = this.model.get("links");
-
+            
             for (var i = 0; i < links.length; i++) {
-
-                $("#link_"+links[i].source.name+"_"+links[i].target.name)
+                $("#link_"+links[i][0]+"_"+links[i][1])
                     .css("stroke-width", 5);
             }
+
         },
 
         update_link_color: function(links) {
@@ -121,11 +114,8 @@ define([
             // links: array
             //      [[source,target], [source,target]]
 
-            links = this.model.get("links");
-
             for (var i = 0; i < links.length; i++) {
-
-                $("#link_"+links[i].source.name+"_"+links[i].target.name)
+                $("#link_"+links[i][0]+"_"+links[i][1])
                     .css("stroke-opacity", "0.9");
             }
         },
@@ -139,46 +129,28 @@ define([
 
             // Change those edges
 
-            console.log(trajectory);
-
-            console.log(trajectory.paths);
+            var links = [];
 
             for (var i = 0; i < trajectory.paths.length; i++){
-                
+                links.push(trajectory.paths[i].nodes.slice(0, 2), trajectory.paths[i].nodes.slice(1, 3));
             }
 
-            console.log("#link_"+trajectory.paths);
+            this.update_link_width(links);
+            this.update_link_color(links);
 
-            //$("#link_")
-
-            /*this.dataLink = this.model.get("links");
-
-            for(var i = 0; i < this.dataLink.length; i++) {
-
-                var scope = this;
-
-                var n = this.dataLink[i].source.name;
-                console.log(n);
-
-                $("#node_"+this.dataLink[i].source.name).click(function(){
-
-                    $("#link_"+scope.dataLink[i].source.name+"_"+scope.dataLink[i].target.name)
-                        .css("stroke-width", 5);
-
-                });
-            }*/
+            return links;
 
         },
 
         node_shape: function(shape) {
-            /*
-            Add shapes to each node in D3 force simulation.
-
-            Parameter:
-            ---------
-            shape: string
-            SVG shape for each node.
-            */
+            //
+            // Add shapes to each node in D3 force simulation.
+            //
+            // Parameter:
+            // ---------
+            // shape: string
+            // SVG shape for each node.
+            //
 
             var interpolateRadius = d3.interpolate(1, 15);
 
