@@ -51,11 +51,17 @@ define([
             // Click function for trajectory
             var traj = this.model.get("trajectories");
 
-            var scope = this;
+            for (var i = 0; i < traj.paths.length; i++){
+                var nodeNumbers = traj.paths[i].nodes;
 
-            $("#node_"+traj.source).click(traj, function(d){
-                scope.draw_trajectory(d.data);
-            });
+                for (var e = 0; e < nodeNumbers.length; e++) {
+                    var scope = this;
+
+                    $("#node_"+nodeNumbers[e]).click(traj, function(d){
+                        scope.draw_trajectory(d.data);
+                    });
+                }
+            }
 
         },
 
@@ -90,7 +96,7 @@ define([
               .enter().append("line")
                 .attr("class", "graph_link")
                 .attr("id", function(d) {return "link_"+d.source.name+"_"+d.target.name});
-                //.style("stroke-opacity", .9);
+
         },
 
         update_link_width: function(links) {
@@ -138,7 +144,7 @@ define([
 
                 this.update_link_width(links);
                 this.update_link_color(links);
-                
+
                 return links;
             }
 
