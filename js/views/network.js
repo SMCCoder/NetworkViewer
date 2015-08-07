@@ -99,10 +99,10 @@ define([
             // ---------
             // links: array
             //      [[source,target], [source,target]]
-            
+
             for (var i = 0; i < links.length; i++) {
                 $("#link_"+links[i][0]+"_"+links[i][1])
-                    .css("stroke-width", 5);
+                    .attr("stroke-width", 5);
             }
 
         },
@@ -132,13 +132,15 @@ define([
             var links = [];
 
             for (var i = 0; i < trajectory.paths.length; i++){
-                links.push(trajectory.paths[i].nodes.slice(0, 2), trajectory.paths[i].nodes.slice(1, 3));
+                for (var e = 0; e < trajectory.paths[i].nodes.length; e++) {
+                    links.push(trajectory.paths[i].nodes.slice(e, e+2));
+                }
+
+                this.update_link_width(links);
+                this.update_link_color(links);
+                
+                return links;
             }
-
-            this.update_link_width(links);
-            this.update_link_color(links);
-
-            return links;
 
         },
 
@@ -247,7 +249,7 @@ define([
                 var tags = function(key){
                     var nodes = scope.model.get("nodes");
                     var node_names = [];
-                    for(var i = 0; i<nodes.length; i++){
+                    for(var i = 0; i < nodes.length; i++){
                         node_names.push(nodes[i].id);
                     }
 
@@ -269,7 +271,9 @@ define([
                         node_names.push(nodes[i].id);
 
                         if (node_names[i] === numInput) {
-                            $("#node_"+nodes[i].name).css("fill","blue")
+                            var interpolateRadius = d3.interpolate(1, 15);
+                            $("#node-"+nodes[i].name)
+                                .attr("r", 60 )
                         }
                     }
 
@@ -356,9 +360,12 @@ define([
                     // Lets the slider keep track of the new data size.
                     scope.size_slider();
 
-                    var nodeUpdate = scope.nodes;
+                    var nodeUpdate = scope.nodes
+                        .attr("id", function(d) {return "node_"+d.name});
 
                     nodeUpdate.select("circle").transition().duration(1000)
+                        .attr("id", function(d) {return "node-"+d.index})
+                        .attr("node-index", function(d) {return d.index})
                         .attr("r", function(d){ return d3.interpolate(1, 15)(d.value) });
 
                     nodeUpdate.select("text").transition().duration(1000)
