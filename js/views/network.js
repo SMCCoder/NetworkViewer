@@ -56,6 +56,7 @@ define([
 
                 for (var e = 0; e < nodeNumbers.length; e++) {
                     var scope = this;
+                    console.log("#node_"+nodeNumbers[e]);
 
                     $("#node_"+nodeNumbers[e]).click(traj, function(d){
                         scope.draw_trajectory(d.data);
@@ -83,7 +84,7 @@ define([
                 .data(this.model.get("nodes"))
               .enter().append("g")
                 .attr("class", "graph_node")
-                .attr("id", function(d) {return "node_"+d.name})
+                .attr("id", function(d) {return "node_"+d.index})
                 .call(this.force.drag);
         },
 
@@ -95,11 +96,10 @@ define([
                 .data(this.model.get("links"))
               .enter().append("line")
                 .attr("class", "graph_link")
-                .attr("id", function(d) {return "link_"+d.source.name+"_"+d.target.name});
-
+                .attr("id", function(d) {return "link_"+d.source.index+"_"+d.target.index});
         },
 
-        update_link_width: function(links) {
+        update_link_width: function(links, weight) {
             // Given an array of sources and targets, change their width.
             // Parameter:
             // ---------
@@ -108,12 +108,12 @@ define([
 
             for (var i = 0; i < links.length; i++) {
                 $("#link_"+links[i][0]+"_"+links[i][1])
-                    .attr("stroke-width", 5);
+                    .attr("stroke-width", 5*weight);
             }
 
         },
 
-        update_link_color: function(links) {
+        update_link_color: function(links, weight) {
             // Given an array of sources and targets, change their opacity.
             // Parameter:
             // ---------
@@ -121,8 +121,9 @@ define([
             //      [[source,target], [source,target]]
 
             for (var i = 0; i < links.length; i++) {
+                //console.log("#link_"+links[i][0]+"_"+links[i][1]);
                 $("#link_"+links[i][0]+"_"+links[i][1])
-                    .css("stroke-opacity", "0.9");
+                    .css("stroke-opacity", String(weight));
             }
         },
 
@@ -136,14 +137,22 @@ define([
             // Change those edges
 
             var links = [];
+            //console.log(trajectory.paths)
+            console.log(trajectory.paths.length)
+            for (var j = 0; j < trajectory.paths.length; j++){
 
-            for (var i = 0; i < trajectory.paths.length; i++){
-                for (var e = 0; e < trajectory.paths[i].nodes.length; e++) {
-                    links.push(trajectory.paths[i].nodes.slice(e, e+2));
+                var weight = trajectory.paths[j].weight;
+                console.log(j);
+
+                console.log(trajectory.paths[j]);
+
+                for (var e = 0; e < trajectory.paths[j].nodes.length; e++) {
+                    links.push(trajectory.paths[j].nodes.slice(e, e+2));
                 }
 
-                this.update_link_width(links);
-                this.update_link_color(links);
+                this.update_link_width(links, weight);
+                this.update_link_color(links, weight);
+                //console.log(links);
 
                 return links;
             }
@@ -160,7 +169,7 @@ define([
             // SVG shape for each node.
             //
 
-            var interpolateRadius = d3.interpolate(1, 15);
+            var interpolateRadius = d3.interpolate(2, 60);
 
             this.circles = this.nodes.append("circle")
                 .attr("class", "graph_circle")
@@ -196,7 +205,7 @@ define([
                 //
                 //Add text to each node based on each node's "id".
                 //
-                var interpolateRadius = d3.interpolate(1, 15);
+                var interpolateRadius = d3.interpolate(2, 60);
 
                 this.labels = this.nodes.append("text")
                     .attr("class", "graph_text")
@@ -227,7 +236,7 @@ define([
 
             size_slider: function() {
                 var scope = this;
-                var interpolateRadius = d3.interpolate(1, 15);
+                var interpolateRadius = d3.interpolate(2, 60);
 
                 $(function() {
                     $( "#slider" ).slider({
@@ -279,7 +288,7 @@ define([
                         if (node_names[i] === numInput) {
                             var interpolateRadius = d3.interpolate(1, 15);
                             $("#node-"+nodes[i].name)
-                                .attr("r", 60 )
+                                .attr("r", 40 )
                         }
                     }
 
@@ -372,10 +381,10 @@ define([
                     nodeUpdate.select("circle").transition().duration(1000)
                         .attr("id", function(d) {return "node-"+d.index})
                         .attr("node-index", function(d) {return d.index})
-                        .attr("r", function(d){ return d3.interpolate(1, 15)(d.value) });
+                        .attr("r", function(d){ return d3.interpolate(2, 60)(d.value) });
 
                     nodeUpdate.select("text").transition().duration(1000)
-                        .attr("dx", function(d) {return d3.interpolate(1, 15)(d.value)});
+                        .attr("dx", function(d) {return d3.interpolate(2, 60)(d.value)});
 
                     nodeUpdate.transition().duration(1000)
                         .attr("fill", function(d){ return d3.interpolate('orange', 'purple')(d.value)});
