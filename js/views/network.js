@@ -48,22 +48,30 @@ define([
             this.form();
             this.update_data();
 
+            //this.draw_trajectory();
+
             // Click function for trajectory
             var traj = this.model.get("trajectories");
+            console.log(traj.paths);
 
             for (var i = 0; i < traj.paths.length; i++){
                 var nodeNumbers = traj.paths[i].nodes;
+                //console.log(nodeNumbers);
+                var Path = traj.paths[i];
 
                 for (var e = 0; e < nodeNumbers.length; e++) {
-                    var scope = this;
-                    console.log("#node_"+nodeNumbers[e]);
+                    //console.log(nodeNumbers[e]);
 
-                    $("#node_"+nodeNumbers[e]).click(traj, function(d){
+                    var scope = this;
+
+                    var n = nodeNumbers[e];
+
+                    $("#node_"+nodeNumbers[e]).click(Path, function(d){
                         scope.draw_trajectory(d.data);
+                        //console.log(d.data);
                     });
                 }
             }
-
         },
 
         start_force: function(){
@@ -99,35 +107,6 @@ define([
                 .attr("id", function(d) {return "link_"+d.source.index+"_"+d.target.index});
         },
 
-        update_link_width: function(links, weight) {
-            // Given an array of sources and targets, change their width.
-            // Parameter:
-            // ---------
-            // links: array
-            //      [[source,target], [source,target]]
-
-            for (var i = 0; i < links.length; i++) {
-                $("#link_"+links[i][0]+"_"+links[i][1])
-                    .attr("stroke-width", 5*weight);
-            }
-
-        },
-
-        update_link_color: function(links, weight) {
-            // Given an array of sources and targets, change their opacity.
-            // Parameter:
-            // ---------
-            // links: array
-            //      [[source,target], [source,target]]
-
-            for (var i = 0; i < links.length; i++) {
-                //console.log("#link_"+links[i][0]+"_"+links[i][1]);
-                $("#link_"+links[i][0]+"_"+links[i][1])
-                    .css("stroke-opacity", String(weight));
-            }
-        },
-
-
         draw_trajectory: function(trajectory) {
             // Parse trajectory object and change edges appropriately
 
@@ -136,26 +115,41 @@ define([
 
             // Change those edges
 
-            var links = [];
-            //console.log(trajectory.paths)
-            console.log(trajectory.paths.length)
-            for (var j = 0; j < trajectory.paths.length; j++){
+            //console.log(trajectory.nodes);
+            //console.log(trajectory.weight);
 
-                var weight = trajectory.paths[j].weight;
-                console.log(j);
+            for (var y = 0; y < trajectory.nodes.length-1; y++) {
+                //console.log(trajectory.nodes[y]);
+                var weight = trajectory.weight[y];
 
-                console.log(trajectory.paths[j]);
+                var slice = trajectory.nodes.slice(y, y+2);
 
-                for (var e = 0; e < trajectory.paths[j].nodes.length; e++) {
-                    links.push(trajectory.paths[j].nodes.slice(e, e+2));
-                }
+                $("#link_"+slice[0]+"_"+slice[1])
+                    .css("stroke-opacity", String(weight*.15))
+                    .css("stroke-width", weight*2);
 
-                this.update_link_width(links, weight);
-                this.update_link_color(links, weight);
-                //console.log(links);
-
-                return links;
+                console.log("#link_"+slice[0]+"_"+slice[1]);
             }
+
+            /*for (var i = 0; i < trajectory.paths.length; i++) {
+                var weight = trajectory.paths[i].weight;
+
+                for (var s = 0; s < trajectory.paths[i].nodes.length-1; s++) {
+                    var slice = trajectory.paths[i].nodes.slice(s, s+2)
+
+                    d3.select("#link_"+slice[0]+"_"+slice[1])
+                        .attr("stroke-opacity", String(weight*.15))
+                        .attr("stroke-width", weight*2);
+
+                    d3.select("#link_"+slice[1]+"_"+slice[0])
+                        .attr("stroke-opacity", String(weight*.15))
+                        .attr("stroke-width", weight*2);
+                }
+            }*/
+
+        },
+
+        undraw_trajectory: function(){
 
         },
 
@@ -169,7 +163,7 @@ define([
             // SVG shape for each node.
             //
 
-            var interpolateRadius = d3.interpolate(2, 60);
+            var interpolateRadius = d3.interpolate(2, 13);
 
             this.circles = this.nodes.append("circle")
                 .attr("class", "graph_circle")
@@ -205,7 +199,7 @@ define([
                 //
                 //Add text to each node based on each node's "id".
                 //
-                var interpolateRadius = d3.interpolate(2, 60);
+                var interpolateRadius = d3.interpolate(2, 13);
 
                 this.labels = this.nodes.append("text")
                     .attr("class", "graph_text")
@@ -236,14 +230,14 @@ define([
 
             size_slider: function() {
                 var scope = this;
-                var interpolateRadius = d3.interpolate(2, 60);
+                var interpolateRadius = d3.interpolate(2, 13);
 
                 $(function() {
                     $( "#slider" ).slider({
                         value: 1,
                         min: 0,
-                        max: 3,
-                        step: .5,
+                        max: 6,
+                        step: .25,
                         slide: function( event, ui ) {
                             $( "#amount" ).val( ui.value );
                             scope.labels.transition().duration(300)
