@@ -28,14 +28,16 @@ define([
 
             // Initialize the svg width
             this.svg = d3.select(this.element).append("svg")
-            .attr("width", this.width)
-            .attr("height", this.height)
+            .attr("width", 790)
+            .attr("height", this.height);
+
+            console.log(this.width);
 
             // Initialize the force
             this.force = d3.layout.force()
             .charge(this.model.get("charge"))
             .linkDistance(this.model.get("link_distance"))
-            .size([this.width-10, this.height-10])
+            .size([this.width-300, this.height-10])
 
             // Start force simulation.
             this.start_force();
@@ -47,14 +49,194 @@ define([
             this.size_slider();
             this.form();
             this.update_data();
+            this.draw_trajectory_table();
+        },
 
-            //this.draw_trajectory();
+        draw_trajectory_table: function(){
+
+            var scope = this;
 
             // Click function for trajectory
             var traj = this.model.get("trajectories");
-            console.log(traj.paths);
 
-            for (var i = 0; i < traj.paths.length; i++){
+            var dataTable = function() {}
+
+            dataTable.prototype.add_element = function(pathIndex, weight) {
+                //console.log(pathIndex);
+                //console.log(weight);
+
+                /*title1 = $("<th>").text("Tractory #");
+                title2 = $("<th>").text("Value");
+
+                header = $("<thead>").append(title1).append(title2);
+                //return header;*/
+
+                column = $("<td>").attr("id", "tablecolumn_"+pathIndex)
+                    .text("Trajectory "+pathIndex)
+                    .attr("padding-right","300");
+
+                weight = $("<td>").attr("id", "tablecolumn_"+weight)
+                    .text(weight);
+
+                label = $("<tr>").append(column).append(weight);
+                return label;
+
+            }
+
+            dataTable.prototype.build_list = function(parent, pathIndex, probability) {
+                //console.log(parent);
+                //console.log(pathIndex);
+                //console.log(probability);
+
+                for (var e = 0; e < pathIndex.length; e++) {
+                    //console.log(e);
+                    menu = this.add_element(pathIndex[e], probability[e]);
+                    $(parent).append(menu);
+                    //console.log(traj.paths[e]);
+                    menu.click([traj.paths[e], menu], click_row);
+                    //menu.click(traj.paths, rm_traj);
+                    menu.mouseover(traj.paths[e], hover_row);
+                    menu.mouseout(traj.paths[e], out_row);
+                    //menu.dblclick
+                }
+            }
+
+            var get_path_index = function(traj) {
+                //console.log(traj.paths);
+                var path_index = [];
+                for (var i = 0; i < traj.paths.length; i++) {
+                    path_index.push(traj.paths[i].index);
+                    //console.log(path_index);
+                }
+                //console.log(path_index);
+                return path_index;
+            }
+
+            var get_weight = function(traj) {
+
+                var probability = [];
+                for (var i = 0; i < traj.paths.length; i++) {
+                    probability.push(traj.paths[i].weight);
+                }
+                //console.log(probability);
+                return probability;
+            }
+
+            var hover_row = function(d) {
+                //console.log("hovered");
+                var weight = d.data.weight;
+
+                for (var h = 0; h < d.data.nodes.length-1; h++) {
+                    //console.log(d.data.nodes[h]);
+                    var slice = d.data.nodes.slice(h, h+2);
+                    //console.log(d.data.nodes[h]);
+
+                    d3.select("#node_"+d.data[h])
+                        .attr("fill", "red");
+
+                    d3.select("#link_"+slice[0]+"_"+slice[1])
+                        .attr("stroke-opacity", String(weight*.005))
+                        .attr("stroke-width", weight*1);
+
+                    d3.select("#link_"+slice[1]+"_"+slice[0])
+                        .attr("stroke-opacity", String(weight*.005))
+                        .attr("stroke-width", weight*1);
+                }
+            }
+
+            var out_row = function(d) {
+                //console.log("out");
+                //console.log(d.data)
+
+                for (var h = 0; h < d.data.nodes.length-1; h++) {
+                    //console.log(d.data.nodes[h]);
+                    var slice = d.data.nodes.slice(h, h+2);
+                    //console.log(d.data.nodes[h]);
+
+                    //d3.select("#node_"+d.data[h])
+                        //.attr("fill", "red");
+
+                    d3.select("#link_"+slice[0]+"_"+slice[1])
+                        .attr("stroke-opacity", "1")
+                        .attr("stroke-width", 1);
+
+                    d3.select("#link_"+slice[1]+"_"+slice[0])
+                        .attr("stroke-opacity", "1")
+                        .attr("stroke-width", 1);
+                }
+            }
+
+            var click_row = function(d) {
+                //var scope = this;
+                //console.log(scope);
+                //console.log(d.data[1]);
+
+                var weight = d.data[0].weight;
+                var menu = d.data[1];
+
+                for (var h = 0; h < d.data[0].nodes.length-1; h++) {
+                    //console.log(d.data.nodes[h]);
+                    var slice = d.data[0].nodes.slice(h, h+2);
+                    //console.log(slice);
+                    //console.log(scope.links);
+
+                    var line = "<line>";
+                        //.attr("class", "graph_link")
+                        //.attr("stroke-opacity", String(weight*.15))
+                        //.attr("stroke-width", weight*2);
+                        //.attr("id", function(d) {return "link-"+d.source.index+"-"+d.target.index});
+
+                    console.log(line);
+
+                    $("#link_"+slice[0]+"_"+slice[1])
+                        .append(line);
+                            //.attr("stroke-opacity", String(weight*.15))
+                            //.attr("stroke-width", weight*2);
+
+                    $("#link_"+slice[1]+"_"+slice[0])
+                        .append(line);
+                            //.attr("class", "Line")
+                            //.attr("stroke-opacity", String(weight*.15))
+                            //.attr("stroke-width", weight*2);
+                }
+                menu.unbind("mouseover")
+                    .unbind("mouseout");
+                //rm_traj();
+
+            }
+
+            var rm_traj = function(d) {
+                var weight = d.data.weight;
+
+                for (var h = 0; h < d.data.nodes.length-1; h++) {
+                    //console.log(d.data.nodes[h]);
+                    var slice = d.data.nodes.slice(h, h+2);
+                    //console.log(slice);
+
+                    d3.select("#link_"+slice[0]+"_"+slice[1])
+                        .attr("stroke-opacity", "1")
+                        .attr("stroke-width", 1);
+
+                    d3.select("#link_"+slice[1]+"_"+slice[0])
+                        .attr("stroke-opacity", "1")
+                        .attr("stroke-width", 1);
+                }
+            }
+
+            var probability = get_weight(traj);
+            //console.log(probability);
+
+            var index = get_path_index(traj);
+            //console.log(index);
+
+            var list = new dataTable();
+            list.build_list("#tablebody", index, probability);
+
+
+
+            //console.log(traj.paths);
+
+            /*for (var i = 0; i < traj.paths.length; i++){
                 var nodeNumbers = traj.paths[i].nodes;
                 //console.log(nodeNumbers);
                 var Path = traj.paths[i];
@@ -66,12 +248,16 @@ define([
 
                     var n = nodeNumbers[e];
 
-                    $("#node_"+nodeNumbers[e]).click(Path, function(d){
+                    $("#node_"+nodeNumbers[e]).click(traj, function(d){
                         scope.draw_trajectory(d.data);
                         //console.log(d.data);
                     });
                 }
-            }
+            }*/
+        },
+
+        undraw_trajectory: function(){
+
         },
 
         start_force: function(){
@@ -118,7 +304,7 @@ define([
             //console.log(trajectory.nodes);
             //console.log(trajectory.weight);
 
-            for (var y = 0; y < trajectory.nodes.length-1; y++) {
+            /*for (var y = 0; y < trajectory.nodes.length-1; y++) {
                 //console.log(trajectory.nodes[y]);
                 var weight = trajectory.weight[y];
 
@@ -129,7 +315,7 @@ define([
                     .css("stroke-width", weight*2);
 
                 console.log("#link_"+slice[0]+"_"+slice[1]);
-            }
+            }*/
 
             /*for (var i = 0; i < trajectory.paths.length; i++) {
                 var weight = trajectory.paths[i].weight;
@@ -146,10 +332,6 @@ define([
                         .attr("stroke-width", weight*2);
                 }
             }*/
-
-        },
-
-        undraw_trajectory: function(){
 
         },
 
