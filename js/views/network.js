@@ -85,6 +85,7 @@ define([
 
                 header = $("<thead>").append(title1).append(title2);
                 //return header;*/
+                console.log(weight);
 
                 column = $("<td>").attr("id", "tablecolumn_"+pathIndex)
                     .text("Trajectory "+pathIndex)
@@ -117,11 +118,12 @@ define([
             var get_path_index = function(traj) {
                 //console.log(traj.paths);
                 var path_index = [];
+                //console.log(traj.paths)
                 for (var i = 0; i < traj.paths.length; i++) {
                     path_index.push(traj.paths[i].index);
                     //console.log(path_index);
                 }
-                //console.log(path_index);
+                console.log(path_index);
                 return path_index;
             }
 
