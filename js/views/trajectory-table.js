@@ -6,8 +6,9 @@ define([
     'jquery',
     'jqueryui',
     'd3',
-    'backbone'
-], function($, $ui, d3, backbone) {
+    'backbone',
+    'js/models/network'
+], function($, $ui, d3, backbone, NetworkModel) {
 
     // --------------------------------------
     // Trajectory widget
@@ -27,11 +28,12 @@ define([
 
             this.indices = this.get_path_index(this.traj);
             this.build_list("#tablebody", this.indices);
+            console.log(_.clone(this.model.get("nodes")));
         },
 
         build_list: function(parent, index){
             // Construct a complete html table of all trajectories
-
+            console.log(index);
             for (var e = 0; e < index.length; e++) {
                 var menu = this.add_element(index[e]);
                 var edges = this.traj[e];
@@ -84,6 +86,12 @@ define([
             var index = d.data[1];
             var menu = d.data[2];
 
+            //var menu = d.data[1];
+            //console.log(menu);
+            $(menu)
+                .css("color", "red")
+                .css("font-size","17px");
+
             // Remove previous click event and add trajectory to model.
             menu.off("click")
             //menu.off("mouseover")
@@ -100,6 +108,10 @@ define([
             var that = d.data[0]
             var index = d.data[1];
             var menu = d.data[2];
+
+            $(menu)
+                .css("color", "#333")
+                .css("font-size","14px");
 
             // Remove previous click event and remove trajectory from model.
             menu.off("click")
